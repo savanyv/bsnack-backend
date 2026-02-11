@@ -16,6 +16,9 @@ type Config struct {
 	DBUser string
 	DBPassword string
 	DBName string
+
+	RedisAddr string
+	RedisPassword string
 }
 
 func LoadConfig() *Config {
@@ -30,6 +33,8 @@ func LoadConfig() *Config {
 		DBUser:     loadEnv("DB_USER"),
 		DBPassword: loadEnv("DB_PASSWORD"),
 		DBName:     loadEnv("DB_NAME"),
+		RedisAddr:  loadEnv("REDIS_ADDR"),
+		RedisPassword: loadEnv("REDIS_PASSWORD"),
 	}
 }
 
