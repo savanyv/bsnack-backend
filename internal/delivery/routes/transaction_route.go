@@ -19,4 +19,5 @@ func transactionRegister(app fiber.Router) {
 
 	app.Post("/transactions", handler.CreateTransaction)
 	app.Post("/transactions/redeem", handler.RedeemPoint)
+	app.Get("/transactions", handler.GetTransactionByPeriod)
 }

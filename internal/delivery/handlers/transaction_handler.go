@@ -65,3 +65,27 @@ func (h *TransactionHandler) RedeemPoint(c *fiber.Ctx) error {
 		"message": 	"Successfully redeem point",
 	})
 }
+
+func (h *TransactionHandler) GetTransactionByPeriod(c *fiber.Ctx) error {
+	startDate := c.Query("start_date")
+	endDate := c.Query("end_date")
+
+	if startDate == "" || endDate == "" {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "start_date and end_date are required",
+		})
+	}
+
+	res, err := h.usecase.GetTransactionByPeriod(c.Context(), startDate, endDate)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error":   "Failed to get transaction by period",
+			"message": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"message": 	"Successfully get transaction by period",
+		"data": res,
+	})
+}

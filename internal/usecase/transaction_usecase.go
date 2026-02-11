@@ -14,6 +14,7 @@ import (
 type TransactionUsecase interface {
 	CreateTransaction(ctx context.Context, req dtos.CreateTransactionRequest) (*dtos.CreateTransactionResponse, error)
 	ReedemPoint(ctx context.Context, req dtos.ReedemPointRequest) error
+	GetTransactionByPeriod(ctx context.Context, startDate, endDate string) (*dtos.TransactionSummaryResponse, error)
 }
 
 type transactionUsecase struct {
@@ -186,4 +187,34 @@ func (u *transactionUsecase) ReedemPoint(ctx context.Context, req dtos.ReedemPoi
 	}
 
 	return tx.Commit()
+}
+
+func (u *transactionUsecase) GetTransactionByPeriod(ctx context.Context, startDate, endDate string) (*dtos.TransactionSummaryResponse, error) {
+	transactions, err := u.transactionRepo.GetByPeriod(ctx, startDate, endDate)
+	if err != nil {
+		return nil, errors.New("failed to get transactions")
+	}
+
+	totalCustomer, totalIncome, bestSeller, err := u.transactionRepo.GetSummary(ctx, startDate, endDate)
+
+	var list []dtos.TransactionListItem
+	for _, t := range transactions {
+		list = append(list, dtos.TransactionListItem{
+			ID: t.ID.String(),
+			CustomerID: t.CustomerID.String(),
+			TotalPrice: t.TotalPrice,
+			CreatedAt: t.TransactionDate.Format("2006-01-02 15:04:05"),
+		})
+	}
+
+	response := dtos.TransactionSummaryResponse{
+		StartDate: startDate,
+		EndDate: endDate,
+		TotalCustomer: totalCustomer,
+		TotalIncome: totalIncome,
+		BestSeller: bestSeller,
+		Transactions: list,
+	}
+
+	return &response, nil
 }
