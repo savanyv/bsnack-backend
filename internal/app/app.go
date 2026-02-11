@@ -11,7 +11,9 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/savanyv/bsnack-backend/config"
+	"github.com/savanyv/bsnack-backend/internal/cache"
 	"github.com/savanyv/bsnack-backend/internal/database"
+	"github.com/savanyv/bsnack-backend/internal/delivery/routes"
 	"github.com/savanyv/bsnack-backend/internal/middlewares"
 )
 
@@ -43,9 +45,13 @@ func (s *Server) Start() error {
 		return fmt.Errorf("failed to migrate database: %w", err)
 	}
 
+	// Redis
+	redisClient := cache.NewRedisClient(s.config)
+
 	// Middleware & Routes
 	s.app.Use(middlewares.CORSMiddleware())
 	s.app.Use(middlewares.MethodValidationMiddleware())
+	routes.RegisterRoutes(s.app, redisClient)
 
 	// Start Server
 	addr := fmt.Sprintf(":%s", s.config.AppPort)
