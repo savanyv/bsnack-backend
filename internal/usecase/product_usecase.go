@@ -114,6 +114,10 @@ func (u *productUsecase) GetByID(ctx context.Context, ID string) (*dtos.ProductR
 		return nil, errors.New("product not found")
 	}
 
+	if product == nil {
+		return nil, errors.New("product not found")
+	}
+
 	response := dtos.ProductResponse{
 		ID: product.ID.String(),
 		Name: product.Name,

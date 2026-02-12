@@ -41,9 +41,6 @@ func (s *Server) Start() error {
 	if _, err := database.InitDatabase(s.config); err != nil {
 		return fmt.Errorf("failed to initialize database: %w", err)
 	}
-	if err := database.AutoMigrate(); err != nil {
-		return fmt.Errorf("failed to migrate database: %w", err)
-	}
 
 	// Redis
 	redisClient := cache.NewRedisClient(s.config)
