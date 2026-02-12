@@ -203,7 +203,7 @@ func (u *transactionUsecase) GetTransactionByPeriod(ctx context.Context, startDa
 			ID: t.ID.String(),
 			CustomerID: t.CustomerID.String(),
 			TotalPrice: t.TotalPrice,
-			CreatedAt: t.TransactionDate.Format("2006-01-02 15:04:05"),
+			TransactionDate: t.TransactionDate.Format("2006-01-02 15:04:05"),
 		})
 	}
 

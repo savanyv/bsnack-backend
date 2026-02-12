@@ -35,5 +35,5 @@ type TransactionListItem struct {
 	ID string `json:"id"`
 	CustomerID string `json:"customer_id"`
 	TotalPrice int `json:"total_price"`
-	CreatedAt string `json:"created_at"`
+	TransactionDate string `json:"transaction_date"`
 }
